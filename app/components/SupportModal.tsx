@@ -11,16 +11,16 @@ interface SupportModalProps {
 
 const FAQ_LIST = [
   {
-    q: "写真金庫に保存した画像は誰かに見られませんか？",
-    a: "完全に暗号化されており、あなた以外の誰にも見られません。身バレ対策としてWebP形式への圧縮とEXIF（位置情報）の完全消去も自動で行われます。",
+    q: "お客様のカルテや施術メモは他の人に見られませんか？",
+    a: "完全に暗号化されており、あなた以外のサロンスタッフや第三者に見られることは一切ありません。安心してお使いいただけます。",
   },
   {
-    q: "チャット返信や日記の生成制限はありますか？",
+    q: "文章生成やチャットの利用制限はありますか？",
     a: "現在はβ版として完全無料でご利用いただけます。連打による負荷を防ぐため、3秒程度のインターバルを設けています。",
   },
   {
-    q: "自衛カルテにお客さんの本名を書いても安全ですか？",
-    a: "データは厳重なセキュリティで保護されていますが、万が一の画面チラ見えなどを防ぐため、あだ名やイニシャルでの登録をおすすめします。",
+    q: "お客様の本名や個人情報を登録しても大丈夫ですか？",
+    a: "データは厳重なセキュリティで保護されていますが、万が一の画面チラ見え対策として、あだ名やイニシャルでのご登録もおすすめです。",
   },
   {
     q: "パスワードを忘れてしまった場合はどうすればいいですか？",
@@ -40,44 +40,6 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
   // 規約モーダル用
   const [isTermsOpen, setIsTermsOpen] = useState(false);
 
-  // --- ここから追加 ---
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!content.trim()) return;
-
-    setSending(true);
-    try {
-      // ログイン中のユーザーがいればIDを取得
-      const { data: { user } } = await supabase.auth.getUser();
-
-      const { error } = await supabase.from("feedbacks").insert({
-        user_id: user?.id || null,
-        category,
-        content,
-        contact_email: contactEmail.trim() || null,
-      });
-
-      if (error) throw error;
-
-      // 送信成功時
-      setSentMessage(true);
-      setContent("");
-      setContactEmail("");
-      setTimeout(() => {
-        setSentMessage(false);
-        onClose();
-      }, 2000);
-    } catch (err) {
-      console.error("Feedback send error:", err);
-      alert("送信に失敗しました。時間をおいて再度お試しください。");
-    } finally {
-      setSending(false);
-    }
-  };
-  // --- ここまで追加 ---
-
-  if (!isOpen) return null;
-
   if (!isOpen) return null;
 
   return (
@@ -86,8 +48,8 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
         <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-col gap-4 max-h-[85vh] overflow-y-auto">
           <div className="flex justify-between items-center border-b border-slate-800 pb-3">
             <div className="flex items-center gap-2">
-              <span className="text-xl">🌙</span>
-              <h2 className="text-sm sm:text-base font-bold text-slate-100">Casty サポート＆ヘルプ</h2>
+              <span className="text-xl">📋</span>
+              <h2 className="text-sm sm:text-base font-bold text-slate-100">SalonNote サポート＆ヘルプ</h2>
             </div>
             <button
               type="button"
@@ -105,7 +67,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
               onClick={() => setTab("faq")}
               className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition ${
                 tab === "faq"
-                  ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -116,7 +78,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
               onClick={() => setTab("contact")}
               className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition ${
                 tab === "contact"
-                  ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -140,7 +102,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
                       className="w-full text-left p-3 text-xs font-bold text-slate-200 flex justify-between items-center gap-2"
                     >
                       <span>Q. {item.q}</span>
-                      <span className="text-rose-400 text-sm">{isOpenItem ? "−" : "＋"}</span>
+                      <span className="text-emerald-400 text-sm">{isOpenItem ? "−" : "＋"}</span>
                     </button>
                     {isOpenItem && (
                       <div className="px-3 pb-3 text-[11px] sm:text-xs text-slate-400 leading-relaxed border-t border-slate-900 pt-2 bg-slate-900/40">
@@ -159,7 +121,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
               {sentMessage ? (
                 <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-6 text-center text-xs text-emerald-300 leading-relaxed animate-fadeIn">
                   ✨ 送信が完了しました！<br />
-                  ご意見・ご報告ありがとうございます。今後の改善に役立てます。
+                  ご意見・ご報告ありがとうございます。今後のサービス改善に役立てます。
                 </div>
               ) : (
                 <form
@@ -211,7 +173,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
                           onClick={() => setCategory(c.key as any)}
                           className={`py-1.5 rounded-lg text-[10px] font-bold border transition ${
                             category === c.key
-                              ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                              ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
                               : "bg-slate-950 text-slate-400 border-slate-800"
                           }`}
                         >
@@ -223,15 +185,15 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
 
                   <div>
                     <label className="text-[10px] text-slate-400 block mb-1">
-                      内容・リクエスト詳細 <span className="text-rose-400">*</span>
+                      内容・リクエスト詳細 <span className="text-emerald-400">*</span>
                     </label>
                     <textarea
                       required
                       rows={4}
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
-                      placeholder="例: 写真金庫にタグ付け機能がほしい、返信作成でこういう返しも追加してほしい、など"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-rose-400 resize-none"
+                      placeholder="例: カルテに写真添付機能がほしい、予約管理の項目を追加してほしい、など"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-emerald-400 resize-none"
                     />
                   </div>
 
@@ -244,14 +206,14 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
                       value={contactEmail}
                       onChange={(e) => setContactEmail(e.target.value)}
                       placeholder="example@mail.com"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-rose-400"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-emerald-400"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={sending}
-                    className="w-full mt-1 bg-gradient-to-r from-rose-500 to-pink-600 hover:opacity-90 font-bold py-2.5 rounded-xl text-xs text-white shadow active:scale-95 transition disabled:opacity-50"
+                    className="w-full mt-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-90 font-bold py-2.5 rounded-xl text-xs text-white shadow active:scale-95 transition disabled:opacity-50"
                   >
                     {sending ? "送信中..." : "ご意見・報告を送信する"}
                   </button>
@@ -265,7 +227,7 @@ export default function SupportModal({ isOpen, onClose }: SupportModalProps) {
             <button
               type="button"
               onClick={() => setIsTermsOpen(true)}
-              className="text-[11px] text-slate-400 hover:text-rose-300 underline transition"
+              className="text-[11px] text-slate-400 hover:text-emerald-300 underline transition"
             >
               📜 利用規約・プライバシーポリシーを確認
             </button>

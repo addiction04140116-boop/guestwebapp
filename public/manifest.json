@@ -1,7 +1,7 @@
 {
-  "name": "CareNote",
-  "short_name": "CareNote",
-  "description": "体調・周期記録メモ",
+  "name": "SalonNote",
+  "short_name": "SalonNote",
+  "description": "個人サロン・インフルエンサー向け顧客＆SNS管理",
   "start_url": "/",
   "id": "/",
   "display": "standalone",

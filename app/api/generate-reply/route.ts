@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     }
     ipRateLimit.set(clientIp, now);
 
-    const { receivedMsg, customerContext, replyGoal, characterType, castName } =
+    const { receivedMsg, customerContext, replyGoal, characterType, staffName } =
       await req.json();
 
     if (!receivedMsg) {
@@ -32,27 +32,27 @@ export async function POST(req: Request) {
     }
 
     const prompt = `
-あなたは夜職（キャバクラ、ガールズバー、ラウンジ、風俗等）で働くプロキャストの敏腕マネージャー・返信代筆AIです。
-お客さんから届いたメッセージに対し、キャストのキャラや目的に合わせた最適な【3パターンの返信案】を作成してください。
+あなたは個人経営のサロン（ネイル・エステ・美容院等）のオーナーや人気インフルエンサーを支える、プロフェッショナルなSNSマーケティング＆顧客対応マネージャー・返信代筆AIです。
+お客様やフォロワーから届いたメッセージに対し、あなたのキャラや目的に合わせた最適な【3パターンの返信案】を作成してください。
 
-【キャスト情報】
-・源氏名：${castName || "私"}
-・キャラ/文体：${characterType || "あざと可愛い（小悪魔・甘え上手）"}
+【担当者・サロン情報】
+・担当者名/サロン名：${staffName || "私"}
+・キャラ/文体：${characterType || "親しみやすい（丁寧・おしゃれ・共感寄り）"}
 
-【お客さんの背景・補足】
+【お客様の背景・補足】
 ${customerContext || "特になし"}
 
 【返信の目的・ゴール】
-${replyGoal || "無理なプレイ・NG行為をやんわり＆しっかり断る"}
+${replyGoal || "次回予約やリピートへ自然につなげる、または無理なお願いをやんわり断る"}
 
 【届いたメッセージ】
 「${receivedMsg}」
 
 【作成ルール】
-1. キャストのキャラ（${characterType}）を徹底してください。
-2. 源氏名（${castName || ""}）がある場合、一人称や文章に自然に活かしてください。
-3. セクハラ・下ネタ・無理な要求であっても、客のプライドを無駄に傷つけず、かつ断るべき一線はブレずに可愛く・スマートにかわしてください。
-4. LINEや各種DMですぐ使える絵文字・改行にしてください。
+1. キャラ設定（${characterType}）を徹底してください。
+2. 担当者名（${staffName || ""}）がある場合、一人称や文章に自然に活かしてください。
+3. 予約の変更やイレギュラーな要望・価格交渉などであっても、お客様の気分を害さず、かつ自分の軸やサロンのルールはブレずにスマートに対応してください。
+4. InstagramのDMや公式LINEですぐ使える、絵文字や改行のバランスが良い文章にしてください。
 5. 必ず以下のJSONフォーマットのみを出力してください（Markdownコードブロックは不要です）。
 
 {
@@ -62,7 +62,7 @@ ${replyGoal || "無理なプレイ・NG行為をやんわり＆しっかり断�
       "text": "ここに返信文"
     },
     {
-      "label": "少し甘め・あざとく誘導",
+      "label": "少し親しみやすさ・ファン化重視",
       "text": "ここに返信文"
     },
     {
@@ -73,7 +73,7 @@ ${replyGoal || "無理なプレイ・NG行為をやんわり＆しっかり断�
 }
 `;
 
-    // 無料枠の制限が非常に緩い軽量高速モデルを採用
+    // 軽量高速モデルを採用
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash-lite",
       contents: prompt,

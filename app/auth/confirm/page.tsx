@@ -12,21 +12,18 @@ export default function ConfirmPage() {
   useEffect(() => {
     const handleAuth = async () => {
       try {
-        // メールリンクのハッシュ(#access_token=...)やセッションを検証
         const { data: { session }, error } = await supabase.auth.getSession();
 
         if (error) throw error;
 
         if (session) {
           setStatus("success");
-          // 2秒後にアプリのトップページへ自動遷移
           setTimeout(() => {
             router.push("/");
           }, 2000);
           return;
         }
 
-        // 状態変化をリッスン（認証リンク処理完了を検知）
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
           async (event, currentSession) => {
             if (event === "SIGNED_IN" || currentSession) {
@@ -57,7 +54,7 @@ export default function ConfirmPage() {
         {/* ローディング中 */}
         {status === "loading" && (
           <>
-            <div className="w-12 h-12 border-4 border-rose-500/20 border-t-rose-500 rounded-full animate-spin my-2" />
+            <div className="w-12 h-12 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin my-2" />
             <h1 className="text-lg font-bold text-slate-100">
               メールアドレスを認証中...
             </h1>
@@ -70,23 +67,23 @@ export default function ConfirmPage() {
         {/* 認証成功 */}
         {status === "success" && (
           <>
-            <div className="w-16 h-16 bg-gradient-to-tr from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-3xl shadow-lg shadow-rose-500/30 animate-bounce">
+            <div className="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center text-3xl shadow-lg shadow-emerald-500/30 animate-bounce">
               ✨
             </div>
             <div>
-              <span className="text-[11px] font-bold text-rose-400 tracking-wider uppercase">Casty</span>
-              <h1 className="text-xl font-black bg-gradient-to-r from-rose-400 via-pink-400 to-rose-500 bg-clip-text text-transparent mt-1">
+              <span className="text-[11px] font-bold text-emerald-400 tracking-wider uppercase">SalonNote</span>
+              <h1 className="text-xl font-black bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 bg-clip-text text-transparent mt-1">
                 認証が完了しました！
               </h1>
               <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-                Castyへようこそ🌙<br />
-                あなた専用のシークレット相棒へ自動で移動します...
+                SalonNoteへようこそ！<br />
+                あなた専用のサロン・カルテ管理ツールへ自動で移動します...
               </p>
             </div>
             <button
               type="button"
               onClick={() => router.push("/")}
-              className="w-full mt-2 bg-gradient-to-r from-rose-500 to-pink-600 font-bold py-3.5 rounded-xl text-xs sm:text-sm text-white shadow-lg active:scale-95 transition"
+              className="w-full mt-2 bg-gradient-to-r from-emerald-500 to-teal-600 font-bold py-3.5 rounded-xl text-xs sm:text-sm text-white shadow-lg active:scale-95 transition"
             >
               今すぐアプリを開く
             </button>

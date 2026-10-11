@@ -14,11 +14,11 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #fb7185 0%, #e11d48 100%)",
+          background: "linear-gradient(135deg, #10b981 0%, #047857 100%)",
           borderRadius: "40px",
         }}
       >
-        <div style={{ fontSize: "110px", lineHeight: 1 }}>🌸</div>
+        <div style={{ fontSize: "110px", lineHeight: 1 }}>📋</div>
       </div>
     ),
     { ...size }

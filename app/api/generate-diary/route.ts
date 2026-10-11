@@ -20,22 +20,22 @@ export async function POST(req: Request) {
     }
     ipRateLimit.set(clientIp, now);
 
-    const { keywords, tone, target, hasPhoto, castName } = await req.json();
+    const { keywords, tone, target, hasPhoto, staffName } = await req.json();
 
     const prompt = `
-あなたは夜職（キャバクラ、ラウンジ、ガールズバー、風俗等）で働くプロキャストの敏腕SNSマネージャーです。
-オフィシャルブログや写メ日記（ポケパラ、姫デコ、駅ちか等）に投稿する、指名や来店につながる魅力的な日記文を1本作ってください。
+あなたは個人経営のサロン（ネイル・エステ・美容院等）のオーナー、または人気インフルエンサー・インスタグラマーのプロフェッショナルなSNSマーケティングマネージャーです。
+Instagram、サロンブログ、HPのお知らせ等に投稿する、リピートや予約、ファン獲得につながる魅力的な文章を1本作ってください。
 
 【設定】
-・源氏名：${castName || "私"}
-・キャラ/文体：${tone || "あざと可愛い（小悪魔・甘え上手）"}
-・ターゲット：${target || "初回・フリー指名狙い"}
-・写真あり：${hasPhoto ? "はい（写真に触れる一言を自然に入れてください）" : "いいえ"}
-・キーワード/今日の出来事：${keywords || "特になし（日常の可愛い一コマ）"}
+・担当者名/サロン名：${staffName || "私"}
+・キャラ/文体：${tone || "親しみやすい（丁寧・おしゃれ・共感寄り）"}
+・ターゲット：${target || "新規ご予約・リピート促進"}
+・写真/画像あり：${hasPhoto ? "はい（写真や施術ビジュアル、コーディネートに触れる一言を自然に入れてください）" : "いいえ"}
+・キーワード/今日の出来事・施術内容：${keywords || "特になし（日常のワンシーンやおすすめのケア・アイテム紹介）"}
 
 【作成ルール】
-1. キャラ設定（${tone}）を徹底し、読んだお客さんが「会いたい」「お店に行きたい」と思える適度な甘さと親近感を演出してください。
-2. 源氏名が指定されている場合は、自分の名前を文中に自然に活かしてください。
+1. キャラ設定（${tone}）を徹底し、読んだお客様やフォロワーが「この人にお願いしたい」「行ってみたい」と思えるような信頼感と親近感を演出してください。
+2. 担当者名（サロン名）が指定されている場合は、文中に自然に活かしてください。
 3. タイトル（1行目）と本文をセットで作成してください。
 4. 絵文字や改行をバランス良く配置し、スマホで読みやすくしてください。
 5. Markdown記法は使わず、そのままコピペできるテキストのみを出力してください。
@@ -69,9 +69,9 @@ export async function POST(req: Request) {
     const text = response.text?.trim() || "";
     return NextResponse.json({ text });
   } catch (err: any) {
-    console.error("Diary generation error:", err);
+    console.error("Post generation error:", err);
     return NextResponse.json(
-      { error: "日記の生成に失敗しました: " + (err?.message || "通信エラー") },
+      { error: "文章の生成に失敗しました: " + (err?.message || "通信エラー") },
       { status: 500 }
     );
   }
